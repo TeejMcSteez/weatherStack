@@ -1,0 +1,4 @@
+Node.js https://nodejs.org/en 
+npm https://www.npmjs.com/
+PG https://www.npmjs.com/package/pg
+Express https://expressjs.com/

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="stylesheet.css">
+    <title>Weather Data</title>
+</head>
+<body>
+    <h1>Weather Forecast</h1>
+    <h2>Source: <a href="https://www.wsoctv.com/weather/" target="_blank">WSOC-TV</a></h2>
+    <div id="weather"></div>
+    <div id="picture"></div>
+    <script>
+        async function loadWeatherData() {
+            const response = await fetch('/weather-data');
+            const data = await response.json();
+
+            const weatherDiv = document.getElementById('weather');
+            const pictureDiv = document.getElementById('picture')
+            pictureDiv.innerHTML = '';
+
+            let checkSum = 0;
+
+            data.forEach(item => {
+                const content = `<h3>Day: ${item.day}, High: ${item.high_temp}°, Low: ${item.low_temp}°, Precipitation Chance Day/Night Avg: ${item.precipChance}%, Current Temperature: ${item.current_Temp}°, Current Precipitation Chance: ${item.current_Precip_Chance}%</h3><h4>${item.weather_man}</h4>
+                <h3>Tommrows High: ${item.tmmrw_highTemp}, Tommrows Low: ${item.tmmrw_lowTemp}, Tommrows Day Precipitation Chance: ${item.tmmrw_precipChanceDay}, Tommrows Night Precipitation Chance: ${item.tmmrw_precipChanceNight}</h3><h4>${item.tmmrw_weatherman}</h4>`;
+                weatherDiv.innerHTML += content;
+
+                if (item.current_Precip_Chance > 35) {
+                    checkSum = 1;
+                } 
+            });
+
+            if (checkSum == 0) {
+                const pictureShine = '<img src="sun.jpg" alt="No Rain">';
+                pictureDiv.innerHTML += pictureShine;
+            } else {
+                const pictureRain = '<img src="rainjP.jpg" alt="Rain">';
+                pictureDiv.innerHTML += pictureRain;
+            }
+
+        }
+
+        loadWeatherData();
+    </script>
+</body>
+</html>

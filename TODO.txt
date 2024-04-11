@@ -1,0 +1,5 @@
+Add the next days forecast data in a similar schema ======= DONE
+
+Add content dynamic UI ====== mildly looks better; Need to add a little cleaner implementation
+
+Edit days[currentDayIndex[0-6].toUpper()] figure out how Date().getDay() gets the index and why its case specific its an index. ====== DONE; Uses WSOC's Hourly dayOfWeek property to get day in capital
