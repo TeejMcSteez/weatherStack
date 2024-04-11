@@ -1,5 +1,5 @@
 # weatherStack
-Uses a local weather station website to grab the JSON elements needed to display the current day high and low as well as the precipitation chance and displays them on a local HTML page.
+Uses a local weather station website to grab the JSON elements needed to display weather information on a local HTML page.
 
 I wanted to understand how SQL servers work with JavaScript and HTML front-end applications.
 I used node.js alongside pg to write to a PostgreSQL local server from the website's JSON file then I take that data from the table using express for a server endpoint and display it on an HTML page. 
