@@ -1,5 +1,0 @@
-Sitemap: https://www.wsoctv.com/arc/outboundfeeds/sitemap-index?outputType=xml
-Sitemap: https://www.wsoctv.com/arc/outboundfeeds/news-sitemap-index?outputType=xml
-Sitemap: https://www.wsoctv.com/arcio/sitemap/
-User-agent: *
-Disallow: /unavailable-location/
