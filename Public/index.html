@@ -7,9 +7,10 @@
 </head>
 <body>
     <h1>Weather Forecast</h1>
-    <h2>Source: <a href="https://www.wsoctv.com/weather/" target="_blank">WSOC-TV</a></h2>
-    <div id="weather"></div>
     <div id="picture"></div>
+    <h2 id="source">Source: <a href="https://www.wsoctv.com/weather/" target="_blank">WSOC-TV</a></h2>
+    <div id="weather"></div>
+    <a><button id = "reloadButton" onclick="window.location.reload(), loadWeatherData()">Reload</button></a>
     <script>
         async function loadWeatherData() {
             const response = await fetch('/weather-data');
@@ -23,25 +24,99 @@
 
             data.forEach(item => {
                 const content = `<h3>Day: ${item.day}, High: ${item.high_temp}°, Low: ${item.low_temp}°, Precipitation Chance Day/Night Avg: ${item.precipChance}%, Current Temperature: ${item.current_Temp}°, Current Precipitation Chance: ${item.current_Precip_Chance}%</h3><h4>${item.weather_man}</h4>
-                <h3>Tommrows High: ${item.tmmrw_highTemp}, Tommrows Low: ${item.tmmrw_lowTemp}, Tommrows Day Precipitation Chance: ${item.tmmrw_precipChanceDay}, Tommrows Night Precipitation Chance: ${item.tmmrw_precipChanceNight}</h3><h4>${item.tmmrw_weatherman}</h4>`;
+                <h3>Tommrows High: ${item.tmmrw_highTemp}°, Tommrows Low: ${item.tmmrw_lowTemp}°, Tommrows Day Precipitation Chance: ${item.tmmrw_precipChanceDay}%, Tommrows Night Precipitation Chance: ${item.tmmrw_precipChanceNight}%</h3><h4>${item.tmmrw_weatherman}</h4>`;
                 weatherDiv.innerHTML += content;
 
-                if (item.current_Precip_Chance > 35) {
+                if (item.day_night == 'D'&& item.current_Precip_Chance > 35) {
                     checkSum = 1;
-                } 
+                } else if (item.day_night == 'N' && item.current_Precip_Chance > 35) {
+                    checkSum = 2;
+                } else if (item.day_night == 'D' && item.cloud_cover > 50) {
+                    checkSum = 3;
+                } else if (item.day_night == 'N' && item.cloud_cover < 50) {
+                    checkSum = 4;
+                } else if (item.day_night == 'N' && item.cloud_cover > 50) {
+                    checkSum = 5;
+                }
             });
 
-            if (checkSum == 0) {
-                const pictureShine = '<img src="sun.jpg" alt="No Rain">';
-                pictureDiv.innerHTML += pictureShine;
-            } else {
-                const pictureRain = '<img src="rainjP.jpg" alt="Rain">';
-                pictureDiv.innerHTML += pictureRain;
+            switch (checkSum) {
+                case 1:
+                    const picureRainDay = '<img src="pics/rainDay.png" alt="Rain">';
+                    pictureDiv.innerHTML += picureRainDay;
+                    break;
+                case 2:
+                const picureRainNight = '<img src="pics/rainNight.png" alt="Rain Night">';
+                    pictureDiv.innerHTML += picureRainNight;
+                    break;
+                case 3:
+                    const pictureDayCloudy = '<img src="pics/cloudsDay.png" alt="Clouds Day">';
+                    pictureDiv.innerHTML += pictureDayCloudy;
+                    break;
+                case 4:
+                    const pictureNight = '<img src="pics/night.png" alt="Night">';
+                    pictureDiv.innerHTML += pictureNight;
+                    break;
+                case 5:
+                    const pictureNightCloudy = '<img src="pics/cloudsNight.png" alt="Night Cloudy">';
+                    pictureDiv.innerHTML += pictureNightCloudy;
+                    break;
+                default:
+                    const pictureShine = '<img src="pics/sun.png" alt="No Rain">';
+                    pictureDiv.innerHTML += pictureShine;
+                    break;
             }
-
         }
 
         loadWeatherData();
     </script>
 </body>
+
+<script>
+ async function loadDynamicBackground() {
+    const response = await fetch('/weather-data');
+    const data = await response.json();
+
+    data.forEach(item => {
+        
+        let checkSum = 0;
+
+        if (item.current_Precip_Chance > 35) {
+                    checkSum = 1;
+                } else if (item.day_night == 'D' && item.cloud_cover > 50) {
+                    checkSum = 2;
+                } else if (item.day_night == 'N' && item.cloud_cover < 50) {
+                    checkSum = 3;
+                } else if (item.day_night == 'N' && item.cloud_cover > 50) {
+                    checkSum = 4;
+                }
+
+                switch (checkSum) {
+                case 1: //Rain
+                    document.getElementsByTagName("body")[0].style.background = "#8BC6EC";
+                    document.getElementsByTagName("body")[0].style.background = "linear-gradient(to right, #8BC6EC 0%, #9599E2 100%);";
+                    break;
+                case 2: //Day Cloud Cover
+                    document.getElementsByTagName("body")[0].style.background = "#bdc3c7";
+                    document.getElementsByTagName("body")[0].style.background = "linear-gradient(to right, #bdc3c7, #2c3e50)";
+                    break;
+                case 3: //Night No Clouds
+                    document.getElementsByTagName("body")[0].style.background = "2c3e50";
+                    document.getElementsByTagName("body")[0].style.background = "linear-gradient(to right, #2c3e50 0%, #fd746c 100%)";
+                    break;
+                case 4: //Night Clouds
+                    document.getElementsByTagName("body")[0].style.background = "#000000";
+                    document.getElementsByTagName("body")[0].style.background = "linear-gradient(to right, #000000, #434343)";
+                    break;
+                default:
+                    document.getElementsByTagName("body")[0].style.background = "rgb(238,196,174)";
+                    document.getElementsByTagName("body")[0].style.background = "radial-gradient(circle, rgba(238,196,174,0.9472163865546218) 0%, rgba(148,187,233,1) 100%)";
+                    break;
+            }
+    });
+ }
+
+ loadDynamicBackground();
+</script>
+<!-- https://www.youtube.com/watch?v=dQw4w9WgXcQ -->
 </html>

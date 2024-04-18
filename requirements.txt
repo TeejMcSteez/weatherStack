@@ -1,4 +1,14 @@
 Node.js https://nodejs.org/en 
+Install node and run Node init in directory terminal
+
 npm https://www.npmjs.com/
+installed with node
+
 PG https://www.npmjs.com/package/pg
+npm install pg
+
 Express https://expressjs.com/
+npm install express
+
+Postgresql 
+download https://www.postgresql.org/download/

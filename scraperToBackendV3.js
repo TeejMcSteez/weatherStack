@@ -1,4 +1,4 @@
-const apiUrl = 'https://www.wsoctv.com/pf/api/v3/content/fetch/weather-api?query=%7B%22metCollectionAlias%22%3A%22met-forecast%22%2C%22website%22%3A%22cmg-tv-10030%22%2C%22zipCode%22%3A%2228202%22%7D&d=823&_website=cmg-tv-10030';
+const apiUrl = 'https://www.wsoctv.com/pf/api/v3/content/fetch/weather-api?query=%7B%22metCollectionAlias%22%3A%22met-forecast%22%2C%22website%22%3A%22cmg-tv-10030%22%2C%22zipCode%22%3A%2228202%22%7D&d=825&_website=cmg-tv-10030';
 
 async function fetchWeatherData() {
     let forecastDataWSOC = [];
@@ -12,13 +12,12 @@ async function fetchWeatherData() {
       const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
       const currentDayIndex = new Date().getDay(); // This gets the current day as an index (0-6)
       const currentDayName = days[currentDayIndex]; // This gets the current day's name in lowercase
-      const tmmrwDayName = days[currentDayIndex + 1]
+      const tmmrwDayName = days[(currentDayIndex + 1 % 7)]
 
-      //TODO: Edit days[currentDayIndex[0-6].toUpper()] 
       if (data.forecast[currentDayName]) {
         const todayForecast = data.forecast[currentDayName];
-        const todayHigh = todayForecast.calendarDayTemperatureMax;
-        const todayLow = todayForecast.calendarDayTemperatureMin;
+        const todayHigh = todayForecast.temperatureMax;
+        const todayLow = todayForecast.temperatureMin;
         const todayPrecipChanceDay = todayForecast.day.precipChance;
         const todayPrecipChanceNight = todayForecast.night.precipChance;
         const todayPrecipChanceAvg = (todayPrecipChanceDay+todayPrecipChanceNight)/2;
@@ -27,6 +26,9 @@ async function fetchWeatherData() {
         //accessing hourly index
         const currentHourPrecipChance = data.hourly[0].precipChance;
         const currentDayUppercase = data.hourly[0].dayOfWeek; //gets the current day in capital as before I was using JS's Date() object
+        //Used for dynamic picture association
+        const dayOrNight = data.hourly[0].dayOrNight;
+        const cloudCover = data.hourly[0].cloudCover;
         //ugly buffer to keep data access seperate (for now)
         const currentPrecipChance = currentHourPrecipChance;
 
@@ -50,7 +52,10 @@ async function fetchWeatherData() {
             tmmrw_lowTemp: tommrowLow,
             tmmrw_precipChanceDay: tommrowPrecipChanceDay,
             tmmrw_precipChanceNight: tommrowPrecipChanceNight,
-            tmmrw_weatherman: tommrowWeatherman
+            tmmrw_weatherman: tommrowWeatherman,
+            //for dynamics
+            day_night: dayOrNight,
+            cloud_cover: cloudCover
         })
 
       } else {
@@ -69,7 +74,7 @@ const { Client } = require('pg');
 const app = express();
 const PORT = 3000;
 //serving the html file through express
-app.use(express.static('public'));
+app.use(express.static('Public'));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html'); 
@@ -82,7 +87,7 @@ app.get('/weather-data', async (req, res) => {
             host:"localhost",
             user:"postgres",
             port:5432,
-            password:"password",
+            password:"urPassword",
             database: "backend"
         });
         await client.connect();
@@ -99,5 +104,5 @@ app.get('/weather-data', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running view data on http://localhost:${PORT}`);
+  console.log("Server is running! View data on http://localhost:" + PORT)
 });

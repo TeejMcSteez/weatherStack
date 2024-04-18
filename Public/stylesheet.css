@@ -1,6 +1,8 @@
 html {
     margin: 0;
     padding: 0;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 body {
@@ -11,11 +13,9 @@ body {
     flex-direction: column;
     align-items: center; 
     justify-content: center; 
-    min-height: 100vh; 
     margin: 0;
     padding: 20px; 
-    background: #af0a2c;
-    background-size: cover;
+    background-size: 100%;
 }
 
 #weather {
@@ -27,6 +27,11 @@ body {
     border-radius: 10px; 
 }
 
+a {
+    text-decoration: none;
+    color: #fff;
+}
+
 #weather h3 {
     color: #FFF; 
     line-height: 2; 
@@ -34,10 +39,31 @@ body {
 }
 
 #picture {
-    margin-top: 2%;
-    max-width: 75%; 
-    max-height: 50%;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
+    box-shadow: 0 0 8px 8px white inset;
+    border-radius: 50%;
 }
+
+#reloadButton {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#reloadButton button {
+    background-color: rgba(199, 28, 28, 0.8);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 1em 10em;
+    border: 20px;
+    border-radius: 10%;
+}
+
+#reloadButton button:hover {
+    background-color: rgba(54, 52, 52, 0.9);
+}
+
+
